@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         Button button7 = findViewById(R.id.button7);
         Button button8 = findViewById(R.id.button8);
         Button button9 = findViewById(R.id.button9);
-        Button buttondot = findViewById(R.id.buttonDot);
+        Button buttonDot = findViewById(R.id.buttonDot);
 
         Button buttonEquals = findViewById(R.id.buttonEquals);
         Button buttonDivide = findViewById(R.id.buttonDivide);
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonMinus = findViewById(R.id.buttonMinus);
         Button buttonPlus = findViewById(R.id.buttonPlus);
 
-        View.OnClickListener listener =new View.OnClickListener() {
+        View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //here v is cast into a button so the getText() method can be called on it.
@@ -62,10 +62,35 @@ public class MainActivity extends AppCompatActivity {
         button5.setOnClickListener(listener);
         button6.setOnClickListener(listener);
         button7.setOnClickListener(listener);
-        button7.setOnClickListener(listener);
+        button8.setOnClickListener(listener);
         button9.setOnClickListener(listener);
-        buttondot.setOnClickListener(listener);
+        buttonDot.setOnClickListener(listener);
 
 
+        View.OnClickListener opListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button b = (Button) v; //cast the v into a button inorder to use the text method getText()
+                String op = b.getText().toString();//saves the text from the button
+                String value = newNumber.getText().toString();//take the input from this editText and then check
+                //to make sure that the user has entered text before attempting to call an operation on it.
+                if (value.length() != 0) {
+                    performOperation(value, op);
+                }
+                pendingOperation = op;
+                displayOperation.setText(pendingOperation);
+            }
+        };
+
+        buttonEquals.setOnClickListener(opListener);
+        buttonDivide.setOnClickListener(opListener);
+        buttonMultiply.setOnClickListener(opListener);
+        buttonMinus.setOnClickListener(opListener);
+        buttonPlus.setOnClickListener(opListener);
+        buttonEquals.setOnClickListener(opListener);
+
+    }
+    private void performOperation(String value, String operation){
+        displayOperation.setText(operation);
     }
 }
