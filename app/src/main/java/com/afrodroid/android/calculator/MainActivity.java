@@ -14,9 +14,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView displayOperation;
 
     //variables to hold the operands and type of calculations
+    //The class Double is used in place of
     private Double operand1 = null;
-    private Double operand2 = null;
     private String pendingOperation = "=";
+
+    //These are the keys to be used in the Bundle.
+    //I am guessing that the strings values are used to initialize and as place holders
+    private static final String STATE_PENDING_OPERATION = "PendingOperation";
+    private static final String STATE_OPERAND1 = "Operand1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +51,19 @@ public class MainActivity extends AppCompatActivity {
         Button buttonMinus = findViewById(R.id.buttonMinus);
         Button buttonPlus = findViewById(R.id.buttonPlus);
 
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //here v is cast into a button so the getText() method can be called on it.
                 Button b = (Button) v;
+                //This appends every button that is clicked to the newNumber variable
+                //It seems that getText() returns and Editable that must be turned into a String
                 newNumber.append(b.getText().toString());
             }
         };
+
+
         button0.setOnClickListener(listener);
         button1.setOnClickListener(listener);
         button2.setOnClickListener(listener);
@@ -73,10 +83,14 @@ public class MainActivity extends AppCompatActivity {
                 Button b = (Button) v; //cast the v into a button inorder to use the text method getText()
                 String op = b.getText().toString();//saves the text from the button
                 String value = newNumber.getText().toString();//take the input from this editText and then check
-                //to make sure that the user has entered text before attempting to call an operation on it.
-                if (value.length() != 0) {
-                    performOperation(value, op);
+                try {
+                    Double doubleValue = Double.valueOf(value);
+                    performOperation(doubleValue, op);
+                } catch (NumberFormatException e) {
+                    newNumber.setText("");
                 }
+
+
                 pendingOperation = op;
                 displayOperation.setText(pendingOperation);
             }
@@ -87,10 +101,71 @@ public class MainActivity extends AppCompatActivity {
         buttonMultiply.setOnClickListener(opListener);
         buttonMinus.setOnClickListener(opListener);
         buttonPlus.setOnClickListener(opListener);
-        buttonEquals.setOnClickListener(opListener);
 
     }
-    private void performOperation(String value, String operation){
-        displayOperation.setText(operation);
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //variables must be added before the super call
+
+        //here we are storing the value of pending operation, which is a String into the "Key StatePendiing...
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation);
+
+
+        //This check keeps the program from crashing
+        if (operand1 != null) {
+            //Here we are storing the value(double) of operand1 into the key State......
+            outState.putDouble(STATE_PENDING_OPERATION, operand1);
+        }
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION);
+
+        //This restores the text to the display
+        displayOperation.setText(pendingOperation);
+
+    }
+
+    private void performOperation(Double value, String operation) {
+        if (null == operand1) {
+
+
+            //This returns a Double object that holds the double value represented by the String
+            operand1 = value;
+        } else {
+
+
+            if (pendingOperation.equals("=")) {
+                pendingOperation = operation;
+            }
+            switch (pendingOperation) {
+                case "=":
+                    operand1 = value;
+                    break;
+                case "/":
+                    if (value == 0) {
+                        operand1 = 0.0;
+                    } else {
+                        operand1 /= value;
+                    }
+                    break;
+                case "*":
+                    operand1 *= value;
+                    break;
+                case "-":
+                    operand1 -= value;
+                    break;
+                case "+":
+                    operand1 += value;
+                    break;
+            }
+        }
+        result.setText(operand1.toString());
+        newNumber.setText("");
     }
 }
