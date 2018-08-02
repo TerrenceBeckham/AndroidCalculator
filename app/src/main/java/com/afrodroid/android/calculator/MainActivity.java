@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         displayOperation = findViewById(R.id.operation);
 
 
+
         Button button0 = findViewById(R.id.button0);
         Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         Button buttonMultiply = findViewById(R.id.buttonMultiply);
         Button buttonMinus = findViewById(R.id.buttonMinus);
         Button buttonPlus = findViewById(R.id.buttonPlus);
+        Button buttonNegative = findViewById(R.id.buttonNegative);
 
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 newNumber.append(b.getText().toString());
             }
         };
+
 
 
         button0.setOnClickListener(listener);
@@ -96,11 +99,23 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
+        View.OnClickListener negativeListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button b =(Button) v;
+                newNumber.setText("-");
+
+            }
+        };
+
         buttonEquals.setOnClickListener(opListener);
         buttonDivide.setOnClickListener(opListener);
         buttonMultiply.setOnClickListener(opListener);
         buttonMinus.setOnClickListener(opListener);
         buttonPlus.setOnClickListener(opListener);
+        buttonNegative.setOnClickListener(negativeListener);
+
 
     }
 
